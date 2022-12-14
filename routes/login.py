@@ -1,7 +1,8 @@
 import os
 import uuid
 
-from fastapi import APIRouter, HTTPException
+from fastapi import Depends, APIRouter, HTTPException
+
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
@@ -29,10 +30,10 @@ def get_user(email: str):
 @router.post("/register")
 async def register(user: UserCreate):
     """
-    Register Users
+    Endpoint Register Users
 
     Este endpoint es usado para la creacion de usuarios que estarian
-    utilizando esta aplicacion
+    utilizando esta aplicacion.
 
     """
     if user.email in DB["users"]:
@@ -40,11 +41,19 @@ async def register(user: UserCreate):
 
     db_user = User(**user.dict(), id=uuid.uuid4())
     DB["users"][db_user.email] = db_user
+    print(DB)
     return {"detail": "Successful Registered"}
 
 
 @router.post(TOKEN_URL)
-async def login(data: OAuth2PasswordRequestForm):
+async def login(data: OAuth2PasswordRequestForm = Depends()):
+    """
+    Endpoint Login User
+
+    En este endpoint se realiza la autenticacion del usuario, en caso que las
+    credenciales no sean las correctas genera el error.
+
+    """
     email = data.username
     password = data.password
 
@@ -60,3 +69,14 @@ async def login(data: OAuth2PasswordRequestForm):
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/private")
+async def private_route(user=Depends(manager)):
+    """
+    Endpoint Private
+
+    Este Endpoint es utilizado para realizar pruebas si el token es correcto
+    y puede servir mas adelante para refrescar el token.
+    """
+    return {"detail": f"Welcome {user.email}"}
