@@ -71,10 +71,10 @@ async def login(data: OAuth2PasswordRequestForm = Depends()):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/private")
-async def private_route(user=Depends(manager)):
+@router.get("/test-token")
+async def test_token(user=Depends(manager)):
     """
-    Endpoint Private
+    Endpoint Test Token
 
     Este Endpoint es utilizado para realizar pruebas si el token es correcto
     y puede servir mas adelante para refrescar el token.
