@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
 
-from models.UserModel import UserCreatemodel, UserModel
+from models.UserModel import UserCreateModel, UserModel
 
 DEFAULT_SETTINGS = os.getenv("SECRET_FAST_API")
 
@@ -28,7 +28,7 @@ def get_user(email: str):
 
 
 @router.post("/register")
-async def register(user: UserCreatemodel):
+async def register(user: UserCreateModel):
     """
     Endpoint Register Users
 
