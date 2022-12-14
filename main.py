@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+app = FastAPI(description="Empresa EldenLabs", version="1.0.0")
 
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Bienvenidos a EldenLabs"}
 
 
 @app.get("/hello/{name}")
