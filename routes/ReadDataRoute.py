@@ -2,9 +2,10 @@ import codecs
 import csv
 import uuid
 
-from fastapi import APIRouter, UploadFile, Path
+from fastapi import APIRouter, UploadFile, Path, Depends
 
 from models.ReadDataModel import ReadDataModel
+from routes.LoginRoute import manager
 
 router = APIRouter()
 
@@ -16,7 +17,7 @@ DB = {
 @router.post("/send")
 async def send_data(
         file: UploadFile,
-        # user=Depends(manager)
+        user=Depends(manager)
 ):
     csv_reader = csv.DictReader(codecs.iterdecode(file.file, "utf-8"))
     data_csv = []
@@ -44,8 +45,9 @@ async def send_data(
 @router.get("/load/{archive}")
 async def get_data(
         archive: str = Path(...,
-                            example="004f2464-67d5-44c1-aa12-428c504c5d49.csv")
-        # user=Depends(manager)
+                            example="004f2464-67d5-44c1-aa12-428c504c5d49.csv"),
+        user=Depends(manager)
+
 ):
 
     return DB["readData"].get(archive)
