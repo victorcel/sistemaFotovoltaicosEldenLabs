@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
 
-from models.User import UserCreate, User
+from models.UserModel import UserCreatemodel, UserModel
 
 DEFAULT_SETTINGS = os.getenv("SECRET_FAST_API")
 
@@ -28,7 +28,7 @@ def get_user(email: str):
 
 
 @router.post("/register")
-async def register(user: UserCreate):
+async def register(user: UserCreatemodel):
     """
     Endpoint Register Users
 
@@ -39,7 +39,7 @@ async def register(user: UserCreate):
     if user.email in DB["users"]:
         raise HTTPException(status_code=400, detail="this email already exists")
 
-    db_user = User(**user.dict(), id=uuid.uuid4())
+    db_user = UserModel(**user.dict(), id=uuid.uuid4())
     DB["users"][db_user.email] = db_user
     print(DB)
     return {"detail": "Successful Registered"}
